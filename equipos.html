@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <script>
+        const Alljugadores = [
+                { nombre: 'Javier', puntaje: 6, activo:false },
+                { nombre: 'Carlos', puntaje: 10, activo:false },
+                { nombre: 'Ale', puntaje: 3, activo:false },
+                { nombre: 'Emilio', puntaje: 6, activo:false },
+                { nombre: 'Alvaro', puntaje: 4, activo:false },
+                { nombre: 'Arturo', puntaje: 8, activo:false },
+                { nombre: 'Rubi', puntaje: 9, activo:false },
+                { nombre: 'Cristian', puntaje: 6, activo:false },
+                { nombre: 'Oscar', puntaje: 9, activo:false },
+                { nombre: 'Javier O', puntaje: 10, activo:false },
+                { nombre: 'Cristian Papa', puntaje: 4, activo:false },
+                { nombre: 'Vecino Javier', puntaje: 6, activo:false },
+                { nombre: 'Pato', puntaje: 7, activo:false },
+                { nombre: 'Rodrigo', puntaje: 3, activo:false },
+                { nombre: 'Hector', puntaje: 2, activo:false },
+                { nombre: 'Jaime', puntaje: 7, activo:false },
+                { nombre: 'Matias', puntaje: 10, activo:false },
+                { nombre: 'Benjamin', puntaje: 8, activo:false },
+                { nombre: 'Esteban', puntaje: 5, activo:false },
+                { nombre: 'Pastor Ruben', puntaje:7, activo:false},
+                { nombre: 'Pablo', puntaje:5, activo:false}
+            ];
+        var jugadores = [
+        ];
+        function toogleJugador(name){
+            const jug= Alljugadores.find(j=>j.nombre===name);
+            jug.activo=!jug.activo;
+            if(jug.activo){
+                jugadores.push(jug)
+                console.log(jugadores)
+                let btn = document.getElementById('btn-'+name)
+                btn.classList.remove('btn-secondary')
+                btn.classList.add('btn-success')
+            }else{
+                const index = jugadores.findIndex( x => x.nombre === name );
+                jugadores.splice(index,1)
+                console.log(jugadores)
+                let btn = document.getElementById('btn-'+name)
+                btn.classList.remove('btn-success')
+                btn.classList.add('btn-secondary')
+
+            }
+        }
+
+        function getJugadoresDisponibles(){
+            console.log("getJugadoresDisponibles")
+            const listado = document.getElementById('jugadoresDisponibles')
+            var lista="";
+            Alljugadores.forEach(e=>{
+                lista+="<div class='col-3 mb-1'><button id='"+'btn-'+e.nombre+"' class='btn btn-secondary"+(e.activo?' active':'')+"' onclick='toogleJugador(\""+e.nombre+"\")'>"+e.nombre+"</button></div>"
+
+            })
+            //console.log("lista",lista)
+            listado.innerHTML=lista;
+        }
+
+        function armar(){
+            // Arreglo de jugadores
+            let eq1=[];
+            let eq2=[];
+            let intentos=0;
+            while (true) {
+                intentos=intentos+1;
+                // Mezclamos el arreglo de jugadores aleatoriamente
+                jugadores.sort(() => Math.random() - 0.5);
+
+                // Armamos los equipos
+                const equipo1 = [];
+                const equipo2 = [];
+
+                for (let i = 0; i < jugadores.length; i++) {
+                    if (i % 2 === 0) {
+                    equipo1.push(jugadores[i]);
+                    } else {
+                    equipo2.push(jugadores[i]);
+                    }
+                }
+                
+                // Calculamos la diferencia de puntajes
+                const diferencia = Math.abs(equipo1.reduce((total, jugador) => total + jugador.puntaje, 0) - equipo2.reduce((total, jugador) => total + jugador.puntaje, 0));
+
+                // Calculamos la suma de los puntajes dividido en 2 a un 10%
+                const puntajesTotales = jugadores.reduce((total, jugador) => total + jugador.puntaje, 0);
+                const umbral = (puntajesTotales / 2) * 0.1;
+
+                // Si la diferencia es mayor al umbral, volvemos a intentar formar equipos
+                if (diferencia > umbral ) {
+                    console.log('intentos',intentos)
+                    if(intentos<10){ continue;}
+                    
+                    
+                }
+
+                // Imprimimos los equipos y salimos del bucle
+                let puntajeEquipo1 = 0;
+                console.log('Equipo 1:');
+                equipo1.forEach(jugador => {
+                    console.log(jugador.nombre, jugador.puntaje);
+                    puntajeEquipo1 += jugador.puntaje;
+                });
+                equipo1.sort((a,b)=>a.puntaje-b.puntaje)
+                let puntajeEquipo2 = 0;
+                console.log('Equipo 2:');
+                equipo2.forEach(jugador => {
+                    console.log(jugador.nombre, jugador.puntaje);
+                    puntajeEquipo2 += jugador.puntaje;
+                });
+                equipo2.sort((a,b)=>a.puntaje-b.puntaje)
+                
+                let e1=document.getElementById('equipo1');
+                let e2=document.getElementById('equipo2');
+                let e11=document.getElementById('equipo11');
+                let e22=document.getElementById('equipo22');
+
+                let tr1= "";
+                let tr2="";
+                let tr11= "";
+                let tr22="";
+
+                equipo1.forEach((e)=>{
+                    tr1+="<tr><td>"+e.nombre+"</td><td>"+e.puntaje+"</td></tr>"
+                    tr11+="<li>"+e.nombre+"</li>"
+                })
+                tr1+="<tr><td><b>TOTAL</b></td><td><b>"+puntajeEquipo1+"</b></td></tr>";
+                equipo2.forEach((e)=>{
+                    tr2+="<tr><td>"+e.nombre+"</td><td>"+e.puntaje+"</td></tr>"
+                    tr22+="<li>"+e.nombre+"</li>"
+                })
+                tr2+="<tr><td><b>TOTAL</b></td><td><b>"+puntajeEquipo2+"</b></td></tr>";
+
+                e1.innerHTML=tr1;
+                e2.innerHTML=tr2;
+                e11.innerHTML=tr11;
+                e22.innerHTML=tr22;
+
+                break;
+            }
+        }
+        
+        
+    function modalEditar(){
+        const col1= document.getElementById('players1');
+        const col2= document.getElementById('players2');
+        let trs1= "";
+        let trs2= "";
+
+        
+        Alljugadores.forEach((j,index)=>{
+            j.activo=false;
+            
+            if(index < Alljugadores.length/2){
+                trs1+="<tr><td class='text-center'>"+j.nombre+"</td><td class='text-center'><input id='"+j.nombre+"' class='form-control' value='"+j.puntaje+"' type='number' min='1' max='10' /> </td> <td><button class='btn btn-primary' onclick='setPlayer(\""+j.nombre+"\")'>Guardar</button></td></tr>"
+
+            }else{
+                trs2+="<tr><td class='text-center'>"+j.nombre+"</td><td class='text-center'><input id='"+j.nombre+"' class='form-control' value='"+j.puntaje+"' type='number' min='1' max='10' /> </td> <td><button class='btn btn-primary' onclick='setPlayer(\""+j.nombre+"\")'>Guardar</button></td></tr>"
+
+            }
+        })
+
+        col1.innerHTML=trs1;
+        col2.innerHTML=trs2;
+        const modalPlayers = new bootstrap.Modal('#modalPlayers')
+        modalPlayers.show()
+        getJugadoresDisponibles()
+    }
+    
+    function setPlayer(nombre){
+        var ptje= document.getElementById(nombre).value;
+        console.log(nombre,ptje);
+        const jug= Alljugadores.find(j=>j.nombre===nombre);
+        jug.puntaje=parseInt(ptje);
+        console.log("all",Alljugadores)
+    }
+    </script>
+</head>
+<body onload="getJugadoresDisponibles()">
+    <div class="container">
+        <div class="row mt-2 mb-2">
+            <div class="col d-flex justify-content-center">
+                <button class="btn btn-info text-white" onclick="modalEditar()"><b>Editar Jugadores</b></button>
+            </div>
+        </div>
+        <h2>Jugadores Disponibles</h2>
+        <div class="row mt-2 bg-light bg-gradient" id="jugadoresDisponibles">
+            
+        </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <button class="btn btn-success" onclick="armar()">Armar Equipos</button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-6">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Equipo Azul</div>
+                    <div class="card-body">
+                        <table class="table text-white">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Puntaje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipo1">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">Equipo Rojo</div>
+                    <div class="card-body">
+                        <table class="table text-white">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Puntaje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipo2">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-6">
+                <hr>
+                <div class="card text-white bg-primary mb-3 mt-3">
+                    <div class="card-header">Equipo Azul</div>
+                    <div class="card-body">
+                        <ul id="equipo11"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <hr>
+                <div class="card text-white bg-danger mb-3 mt-3">
+                    <div class="card-header">Equipo Rojo</div>
+                    <div class="card-body">
+                        
+                        <ul id="equipo22"></ul>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalPlayers" tabindex="-1" aria-labelledby="modalPlayersLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPlayersLabel">Editar Jugadores</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Puntaje</th>
+                                        <th>Guardar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="players1">
+            
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Puntaje</th>
+                                        <th>Guardar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="players2">
+            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
